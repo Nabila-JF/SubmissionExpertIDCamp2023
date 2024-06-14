@@ -1,11 +1,10 @@
 import streamlit as st
 import joblib
 import pandas as pd
-import os
 
 # Memuat model dan scaler
-model = joblib.load('random_forest_model.joblib')
-scaler = joblib.load('scaler.joblib')
+model = joblib.load('model/random_forest_model.joblib')
+scaler = joblib.load('model/scaler.joblib')
 
 def preprocess_input(input_data):
     # Encoding variabel kategorikal
