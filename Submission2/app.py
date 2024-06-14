@@ -3,37 +3,11 @@ import joblib
 import pandas as pd
 import os
 
-# Fungsi untuk memuat model dan scaler
-def load_model_and_scaler(model_path, scaler_path):
-    try:
-        model = joblib.load(model_path)
-        scaler = joblib.load(scaler_path)
-        return model, scaler
-    except FileNotFoundError as e:
-        st.error(f"File not found: {e}")
-    except Exception as e:
-        st.error(f"Error loading model or scaler: {e}")
-    return None, None
-
-# Path model dan scaler
-model_path = os.path.abspath('model/random_forest_model.joblib')
-scaler_path = os.path.abspath('model/scaler.joblib')
-
-model, scaler = None, None  # Inisialisasi variabel model dan scaler
-
-if os.path.exists(model_path) and os.path.exists(scaler_path):
-    model, scaler = load_model_and_scaler(model_path, scaler_path)
-else:
-    if not os.path.exists(model_path):
-        st.error("Model file does not exist. Please ensure the model is saved in the correct path.")
-    if not os.path.exists(scaler_path):
-        st.error("Scaler file does not exist. Please ensure the scaler is saved in the correct path.")
+# Memuat model dan scaler
+model = joblib.load('model/random_forest_model.joblib')
+scaler = joblib.load('model/scaler.joblib')
 
 def preprocess_input(input_data):
-    # Pastikan scaler tidak None
-    if scaler is None:
-        st.error("Scaler is not defined. Please ensure the scaler is loaded correctly.")
-        return input_data
     # Encoding variabel kategorikal
     categorical_cols = input_data.select_dtypes(include=['object']).columns
     input_data = pd.get_dummies(input_data, columns=categorical_cols, drop_first=True)
@@ -42,7 +16,19 @@ def preprocess_input(input_data):
     numeric_cols = input_data.select_dtypes(include=['float64', 'int64']).columns
     input_data[numeric_cols] = scaler.transform(input_data[numeric_cols])
     
-    return 
+    return input_data
+
+
+def preprocess_input(input_data):
+    # Encoding variabel kategorikal
+    categorical_cols = input_data.select_dtypes(include=['object']).columns
+    input_data = pd.get_dummies(input_data, columns=categorical_cols, drop_first=True)
+    
+    # Normalisasi fitur numerik
+    numeric_cols = input_data.select_dtypes(include=['float64', 'int64']).columns
+    input_data[numeric_cols] = scaler.transform(input_data[numeric_cols])
+    
+    return input_data
 
 # Judul aplikasi
 st.title("Student Dropout Prediction")
@@ -407,18 +393,11 @@ input_data = pd.DataFrame({
     'GDP': [gdp]
 })
 
-# Pastikan input_data_preprocessed hanya diproses jika scaler ada
-if scaler is not None:
-    input_data_preprocessed = preprocess_input(input_data)
-
 # Preprocessing input
 input_data_preprocessed = preprocess_input(input_data)
 
 # Melakukan prediksi
 if st.button('Predict'):
-    if model is not None and scaler is not None:
-        prediction = model.predict(input_data_preprocessed)
-        prediction_label = {0: 'Graduate', 1: 'Dropout', 2: 'Enrolled'}
-        st.write(f'Prediction: {prediction_label[prediction[0]]}')
-    else:
-        st.error("Model or scaler not loaded properly.")
+    prediction = model.predict(input_data_preprocessed)
+    prediction_label = {0: 'Graduate', 1: 'Dropout', 2: 'Enrolled'}
+    st.write(f'Prediction: {prediction_label[prediction[0]]}')
