@@ -3,21 +3,13 @@ import joblib
 import pandas as pd
 import os
 
+# Pastikan file model dan scaler berada pada path yang benar
+model_path = os.path.join('model', 'random_forest_model.joblib')
+scaler_path = os.path.join('model', 'scaler.joblib')
+
 # Memuat model dan scaler
-model = joblib.load('model/random_forest_model.joblib')
-scaler = joblib.load('model/scaler.joblib')
-
-def preprocess_input(input_data):
-    # Encoding variabel kategorikal
-    categorical_cols = input_data.select_dtypes(include=['object']).columns
-    input_data = pd.get_dummies(input_data, columns=categorical_cols, drop_first=True)
-    
-    # Normalisasi fitur numerik
-    numeric_cols = input_data.select_dtypes(include=['float64', 'int64']).columns
-    input_data[numeric_cols] = scaler.transform(input_data[numeric_cols])
-    
-    return input_data
-
+model = joblib.load(model_path)
+scaler = joblib.load(scaler_path)
 
 def preprocess_input(input_data):
     # Encoding variabel kategorikal
