@@ -152,7 +152,7 @@ Untuk menjalankan prototype sistem machine learning yang telah dibuat, ikuti lan
 
 **Link untuk Mengakses Prototype**
 Prototype sistem machine learning dapat diakses melalui link berikut:
-Link Aplikasi Streamlit
+[Link Aplikasi Streamlit](https://billafirza-sub2-expertds-idcamp2023.streamlit.app/)
 
 Dengan mengikuti langkah-langkah di atas, Anda dapat menjalankan prototype sistem machine learning dan melakukan prediksi status mahasiswa berdasarkan data input yang diberikan.
 
